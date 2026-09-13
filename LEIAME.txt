@@ -1,0 +1,1062 @@
+# Módulo Especial de Consultoria na Área de Dados com Agentes de IA
+# Projeto Prático Para Consultoria na Área de Dados com Agentes de IA
+# Deploy de App Para Day Trade Analytics em Tempo Real com Agentes de IA, Groq, DeepSeek e AWS Para Monetização
+
+
+##### Execução Local #####
+
+# Instale o Anaconda Python no seu computador. Links de download para instalação:
+
+https://repo.anaconda.com/archive/Anaconda3-2024.10-1-Windows-x86_64.exe (Windows)
+https://repo.anaconda.com/archive/Anaconda3-2024.10-1-MacOSX-arm64.pkg   (MacOS Apple Silicon)
+https://repo.anaconda.com/archive/Anaconda3-2024.10-1-MacOSX-x86_64.pkg  (MacOS Intel)
+https://repo.anaconda.com/archive/Anaconda3-2024.10-1-Linux-x86_64.sh    (Qualquer Distribuição Linux)
+
+# Abra o terminal ou prompt de comando, navegue até a pasta com os arquivos e execute o comando abaixo para criar um ambiente virtual:
+
+conda create --name dsadeployai python=3.12
+
+# Ative o ambiente:
+
+conda activate dsadeployai (ou: source activate dsadeployai)
+
+# Instale o pip e as dependências:
+
+conda install pip
+pip install -r requirements.txt 
+
+# Execute o comando abaixo e acesse a app pelo navegador.
+
+streamlit run dsa_app.py
+
+# Use os comandos abaixo para desativar o ambiente virtual e remover o ambiente (opcional):
+
+conda deactivate
+conda remove --name dsadeployai --all
+
+
+##### Execução na AWS #####
+
+# Crie sua conta gratuita na AWS.
+
+# Crie uma instância EC2 da camada gratuita AWS.
+
+# Acesse a instância pelo terminal conforme mostrado nas aulas.
+
+# Faça o download do Miniconda (Anaconda é muito pesado para a instância EC2 gratuita) com o comando abaixo:
+
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+
+# Crie a pasta app e copie os arquivos como mostrado nas aulas.
+
+# Execute o comando abaixo:
+
+pip install -r requirements.txt 
+
+# Inicie a app com um dos comandos abaixo:
+
+streamlit run dsa_app.py
+nohup streamlit run dsa_app.py --server.port=8501 --server.address=0.0.0.0 &
+
+# Acesse a app pelo navegador.
+
+# Resolva problemas de acesso como mostrado nas aulas.
+
+# Inicie a monetização da app com seus clientes.
+
+# Nota: Quando terminar seus testes, desligue a instância EC2 conforme mostrado nas aulas.
+
+
+
+
+
+
+
+
+
+
+================================================================================
+AMBIENTE MODERNO (2026) - uv + VSCode + WSL
+================================================================================
+
+Tudo que esta ACIMA desta linha e o material original do curso, preservado sem
+nenhuma alteracao. O que vem daqui para baixo e o guia do ambiente moderno.
+
+Por que existe esta secao: o capitulo foi montado em fevereiro de 2025 usando
+Anaconda e um requirements.txt com todas as versoes travadas. Rodando hoje,
+tres coisas quebram. Esta secao mostra como montar o ambiente atual e o que
+mudou no codigo -- que continua no arquivo, apenas comentado, para comparacao.
+
+
+################################################################################
+#                                                                              #
+#  >>> LEIA PRIMEIRO <<<                                                       #
+#                                                                              #
+#  COMO EXECUTAR O NOTEBOOK NA .venv PELO VSCODE                               #
+#                                                                              #
+#  Se voce fizer so uma coisa deste arquivo, faca esta. Quase todo             #
+#  erro de 'ModuleNotFoundError' vem de pular algum passo daqui.               #
+#                                                                              #
+#  --------------------------------------------------------------------------  #
+#  PASSO 1 - ABRIR O VSCODE NA PASTA CERTA                                     #
+#  --------------------------------------------------------------------------  #
+#                                                                              #
+#  A pasta que voce abre TEM de ser a que contem o notebook:                   #
+#                                                                              #
+#      cd ~/projects/dsa/12-Projeto                                            #
+#      code .                                                                  #
+#                                                                              #
+#  CERTO : abrir  12-Projeto/                                                  #
+#  ERRADO: abrir  dsa/            (a pasta de cima)                            #
+#  ERRADO: abrir  ~/projects/     (mais acima ainda)                           #
+#                                                                              #
+#  Por que isso importa: o arquivo .vscode/settings.json aponta o              #
+#  interpretador para ${workspaceFolder}/.venv/bin/python. O                   #
+#  'workspaceFolder' e a pasta que voce abriu. Se abrir a pasta de             #
+#  cima, esse caminho aponta para o lugar errado e o VSCode nao                #
+#  acha a .venv.                                                               #
+#                                                                              #
+#  --------------------------------------------------------------------------  #
+#  PASSO 2 - ABRIR O NOTEBOOK                                                  #
+#  --------------------------------------------------------------------------  #
+#                                                                              #
+#  No painel da esquerda, clique em:                                           #
+#                                                                              #
+#      Projeto_DayTrade_Analytics_IA.ipynb                                     #
+#                                                                              #
+#  --------------------------------------------------------------------------  #
+#  PASSO 3 - ESCOLHER O KERNEL                                                 #
+#  --------------------------------------------------------------------------  #
+#                                                                              #
+#  No canto SUPERIOR DIREITO do notebook, clique em 'Select Kernel'            #
+#  e siga o caminho:                                                           #
+#                                                                              #
+#      Select Kernel                                                           #
+#        -> Python Environments...                                             #
+#          -> .venv (Python 3.12)          <-- ESTE                            #
+#                                                                              #
+#  Se preferir, use o kernel registrado com nome proprio:                      #
+#                                                                              #
+#      Select Kernel                                                           #
+#        -> Jupyter Kernel...                                                  #
+#          -> Python (uv) - DSA 12 Projeto Day Trade                           #
+#                                                                              #
+#  --------------------------------------------------------------------------  #
+#  PASSO 4 - CONFERIR (nao pule este passo)                                    #
+#  --------------------------------------------------------------------------  #
+#                                                                              #
+#  Execute a celula 1.5 do notebook e olhe o sys.executable.                   #
+#                                                                              #
+#  CERTO:                                                                      #
+#      /home/<voce>/projects/dsa/12-Projeto/.venv/bin/python                   #
+#                                                                              #
+#  ERRADO (kernel do sistema, sem as bibliotecas):                             #
+#      /usr/bin/python3                                                        #
+#                                                                              #
+#  ERRADO (Anaconda, o ambiente antigo do curso):                              #
+#      /home/<voce>/anaconda3/bin/python                                       #
+#                                                                              #
+#  ERRADO (a .venv de OUTRO capitulo):                                         #
+#      /home/<voce>/projects/dsa/74-Cap07/.venv/bin/python                     #
+#                                                                              #
+#  Se estiver errado, volte ao PASSO 3. Nao adianta seguir: todos              #
+#  os imports vao falhar.                                                      #
+#                                                                              #
+#  --------------------------------------------------------------------------  #
+#  PASSO 5 - ATALHOS DE EXECUCAO                                               #
+#  --------------------------------------------------------------------------  #
+#                                                                              #
+#      Shift + Enter    executa a celula e vai para a proxima                  #
+#      Ctrl  + Enter    executa a celula e fica nela                           #
+#      Alt   + Enter    executa e cria uma celula nova abaixo                  #
+#                                                                              #
+#  Para rodar tudo: botao 'Run All' na barra superior.                         #
+#  Se algo travar: 'Restart' e depois 'Run All'.                               #
+#                                                                              #
+#  --------------------------------------------------------------------------  #
+#  PASSO 6 - SE ALGO NAO APARECER                                              #
+#  --------------------------------------------------------------------------  #
+#                                                                              #
+#  O botao 'Select Kernel' nem aparece? Faltam extensoes. Confira              #
+#  DENTRO do WSL:                                                              #
+#                                                                              #
+#      code --list-extensions                                                  #
+#                                                                              #
+#  Precisa ter ms-python.python e ms-toolsai.jupyter. Instale UMA              #
+#  DE CADA VEZ (as duas no mesmo comando falham por concorrencia):             #
+#                                                                              #
+#      code --install-extension ms-python.python                               #
+#      code --install-extension ms-toolsai.jupyter                             #
+#                                                                              #
+#  Se der 'Failed to fetch', baixe o .vsix pela API do marketplace             #
+#  e instale pelo arquivo:                                                     #
+#                                                                              #
+#      code --install-extension arquivo.vsix --force                           #
+#                                                                              #
+#  Extensao instalada com o VSCode ABERTO so vale depois de:                   #
+#  Ctrl+Shift+P > 'Developer: Reload Window'.                                  #
+#                                                                              #
+#  Nao quer usar o VSCode? Rode o Jupyter no navegador:                        #
+#                                                                              #
+#      uv run jupyter lab                                                      #
+#                                                                              #
+#  Assim o ambiente ja e o certo e voce nao escolhe kernel nenhum.             #
+#                                                                              #
+#  --------------------------------------------------------------------------  #
+#  PROBLEMAS MAIS COMUNS NESTE PASSO A PASSO                                   #
+#  --------------------------------------------------------------------------  #
+#                                                                              #
+#  ModuleNotFoundError: streamlit / phi / yfinance                             #
+#     -> kernel errado. Refaca os PASSOS 3 e 4.                                #
+#                                                                              #
+#  A lista de kernels nao mostra a .venv                                       #
+#     -> a .venv nao existe ainda. Rode 'uv sync' no terminal.                 #
+#     -> ou voce abriu a pasta errada. Refaca o PASSO 1.                       #
+#                                                                              #
+#  O notebook abre como texto/JSON, nao como notebook                          #
+#     -> falta a extensao ms-toolsai.jupyter. Veja o PASSO 6.                  #
+#                                                                              #
+#  'API key not set' mesmo com o .env preenchido                               #
+#     -> voce abriu a pasta errada (PASSO 1): o .env fica ao lado              #
+#        do notebook e e procurado a partir da pasta de trabalho.              #
+#                                                                              #
+################################################################################
+
+
+--------------------------------------------------------------------------------
+1. O QUE MUDOU (ANTES x DEPOIS)
+--------------------------------------------------------------------------------
+
+  ASSUNTO                  | ANTES (fev/2025)          | AGORA (2026)
+  -------------------------|---------------------------|-----------------------
+  Gerenciador de ambiente   | Anaconda + conda          | uv
+  Criacao do ambiente       | conda create --name ...   | uv sync
+  Lista de dependencias     | requirements.txt (==)     | pyproject.toml (>=)
+  Reprodutibilidade         | versoes travadas na mao   | uv.lock automatico
+  Rodar o app               | streamlit run dsa_app.py  | uv run streamlit run ...
+  Deploy na AWS             | Miniconda + nohup         | uv + systemd (secao 9)
+  Deploy sem servidor       | (nao havia)               | Community Cloud (secao 10)
+  Editor                    | Jupyter Notebook          | VSCode + WSL
+  Python                    | 3.12 via conda            | 3.12 gerenciado pelo uv
+  Provedor de LLM           | so Groq                   | Groq, OpenAI, Anthropic,
+                            |                           | Grok ou Ollama (local)
+  Escolha do provedor       | fixo no codigo            | caixa de selecao na
+                            |                           | barra lateral
+
+  E as tres quebras de codigo:
+
+  1) MODELOS DESCONTINUADOS
+     Os modelos do video -- "deepseek-r1-distill-llama-70b" e
+     "llama-3.3-70b-versatile" -- nao existem mais na Groq. As chamadas
+     retornam erro 404 (model_not_found). O app agora le o nome do modelo do
+     .env, e o utilitario dsa_lista_modelos.py mostra os nomes validos hoje.
+
+  2) PACOTE DE BUSCA RENOMEADO
+     O "duckduckgo_search" virou "ddgs". O nome antigo ainda instala, mas
+     esta abandonado: emite um aviso e quase sempre devolve ZERO resultados
+     (e instavel, nao morto -- de vez em quando ainda responde). Como nao
+     levanta erro, o agente de busca parecia funcionar e nunca achava nada.
+     O app usa agora a classe DSADuckDuckGo, escrita sobre o ddgs.
+
+  3) .env NAO ENCONTRADO
+     load_dotenv() sem argumento procura o .env a partir da pasta do SCRIPT
+     que chamou. Rodando de outra pasta, o app dizia "API key not set" com o
+     .env corretamente preenchido. Agora usamos o caminho explicito.
+
+  Alem disso: st.plotly_chart(fig, width="stretch") substitui o antigo
+  use_container_width=True, que esta deprecated no Streamlit 1.63.
+
+  O CODIGO ORIGINAL NAO FOI APAGADO. Em dsa_app.py, cada trecho alterado tem o
+  codigo antigo logo acima, comentado, dentro de um bloco assim:
+
+      # ====================================================================
+      # CODIGO ORIGINAL (mantido comentado para referencia)
+      # ====================================================================
+      # <o codigo do curso, linha por linha>
+      #
+      # ====================================================================
+      # VERSAO MODERNA (Python 3.12 + uv)
+      # O que mudou: <o motivo>
+      # ====================================================================
+      <o codigo novo>
+
+
+--------------------------------------------------------------------------------
+2. INSTALAR O uv
+--------------------------------------------------------------------------------
+
+  O uv substitui o conda. A diferenca pratica: o conda instala um Python
+  gigante compartilhado por todos os projetos; o uv cria uma pasta .venv
+  DENTRO do capitulo, com as versoes exatas que ele precisa. Nada vaza de um
+  projeto para o outro -- e ele e muito mais rapido.
+
+  Linux, WSL ou macOS:
+
+      curl -LsSf https://astral.sh/uv/install.sh | sh
+      source $HOME/.local/bin/env
+
+  Windows (PowerShell):
+
+      powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+  Conferir:
+
+      uv --version
+
+
+--------------------------------------------------------------------------------
+3. CRIAR O AMBIENTE DO CAPITULO
+--------------------------------------------------------------------------------
+
+      cd ~/projects/dsa/12-Projeto
+      uv sync
+
+  So isso. O uv le o pyproject.toml, baixa o Python 3.12 se necessario, cria a
+  pasta .venv e instala tudo. Ele tambem gera o uv.lock, que guarda a versao
+  exata de cada pacote instalado -- e o que garante que o ambiente possa ser
+  recriado identico depois.
+
+  Observacao sobre as versoes: no pyproject.toml elas usam ">=" e nao "==".
+  Travar tudo com "==" e como tirar uma foto: no dia seguinte ja envelheceu --
+  foi exatamente o que aconteceu com o requirements.txt original. O ">=" diz
+  "desta versao para cima" e quem guarda a foto exata e o uv.lock.
+
+  O requirements.txt original continua na pasta, como registro historico do
+  que o curso usava em fevereiro de 2025. Ele nao e mais usado.
+
+
+--------------------------------------------------------------------------------
+4. INSTALAR O LLM LOCAL (OLLAMA) -- OPCIONAL, MAS RECOMENDADO
+--------------------------------------------------------------------------------
+
+  O capitulo usa a Groq, que e nuvem e exige chave de API. O Ollama roda na
+  sua propria maquina: sem chave, sem custo, sem internet. E a rede de
+  seguranca -- se voce nao tiver nenhuma chave, o app continua funcionando.
+
+  PASSO 1 (o que derruba muita gente no WSL):
+
+      sudo apt-get update && sudo apt-get install -y zstd
+
+  O instalador do Ollama descompacta os arquivos com zstd. Sem ele, a
+  instalacao morre com:
+
+      ERROR: This version requires zstd for extraction
+
+  PASSO 2 - instalar:
+
+      curl -fsSL https://ollama.com/install.sh | sh
+
+  No Windows, baixe em https://ollama.com/download
+
+  PASSO 3 - baixar o modelo:
+
+      ollama pull llama3.2
+
+  PASSO 4 - conferir:
+
+      ollama list
+
+  SOBRE O SERVIDOR: se o systemd estiver ativo (o comando 'ps -p 1 -o comm='
+  responde "systemd", que e o caso da maioria dos WSL modernos), o instalador
+  registra o Ollama como servico e ele sobe sozinho. Voce NAO precisa rodar
+  'ollama serve'. Se nao houver systemd, rode 'ollama serve' em outro terminal
+  e deixe aberto.
+
+  PEGADINHA DO WSL2: se voce instalou o Ollama no WINDOWS e nao no Linux, ele
+  nao esta em localhost do ponto de vista do WSL. O endereco e o IP que
+  aparece no nameserver do /etc/resolv.conf:
+
+      grep nameserver /etc/resolv.conf
+
+  Coloque esse IP no .env:
+
+      OLLAMA_HOST=http://SEU.IP.AQUI:11434
+
+  A celula 1.6 do notebook detecta os dois casos sozinha.
+
+
+--------------------------------------------------------------------------------
+5. KERNEL NO VSCODE
+--------------------------------------------------------------------------------
+
+  Registrar o kernel com nome proprio (opcional, mas deixa mais claro):
+
+      uv run python -m ipykernel install --user \
+          --name dsa-12-projeto-daytrade \
+          --display-name "Python (uv) - DSA 12 Projeto Day Trade"
+
+  Depois, no notebook: Select Kernel > Python Environments... > .venv (3.12).
+
+  O passo a passo completo, com os caminhos certos e errados do
+  sys.executable, esta na caixa ">>> LEIA PRIMEIRO <<<" no inicio desta secao.
+
+
+--------------------------------------------------------------------------------
+6. CHAVES DE API (.env)
+--------------------------------------------------------------------------------
+
+  O arquivo .env fica na pasta do capitulo e guarda as chaves. Ele ja esta
+  protegido pelo .gitignore -- nao vai junto se voce enviar o projeto ao
+  GitHub.
+
+  AVISO: uma chave de API e uma SENHA QUE GASTA DINHEIRO. Quem tiver a sua
+  chave faz chamadas na sua conta e voce recebe a fatura. Nunca poste em
+  print, video, GitHub ou grupo de WhatsApp. Se desconfiar que vazou, revogue
+  no painel do provedor e gere outra -- revogar e gratuito.
+
+  Onde pegar cada chave:
+
+      Groq       https://console.groq.com/keys
+      OpenAI     https://platform.openai.com/api-keys
+      Anthropic  https://console.anthropic.com/settings/keys
+      Grok (xAI) https://console.x.ai/
+      Ollama     nao precisa de chave (roda local)
+
+  COMO O APP ESCOLHE O PROVEDOR, passo a passo:
+
+  1) Ao abrir, o app le o .env e monta uma lista so com os provedores cuja
+     chave esta preenchida DE VERDADE. Chave ausente, apagada ou ainda com o
+     texto de exemplo ("cole-sua-chave") conta como nao configurada: o
+     provedor simplesmente nao entra na lista, sem erro.
+  2) A ordem da lista e Groq > OpenAI > Anthropic > Grok, e o Ollama local
+     entra por ultimo (ele nao precisa de chave) -- mas so se houver um
+     servidor Ollama respondendo. Sem chave nenhuma e sem Ollama, o app
+     avisa "Nenhum motor de IA disponivel" e para.
+  3) Na barra lateral, logo abaixo das instrucoes, a caixa "Escolha o LLM"
+     mostra essa lista. O primeiro item e o padrao; para usar outro, basta
+     escolher na caixa -- nao precisa mexer no .env nem reiniciar.
+  4) Abaixo da caixa, uma mensagem confirma o provedor e o modelo em uso.
+     O nome do modelo vem da variavel *_MODEL do provedor no .env (ex.:
+     GROQ_MODEL); se ela estiver vazia, o app usa um modelo padrao.
+
+  Quer que um provedor apareca na caixa? Preencha a chave dele no .env e
+  reinicie o app (Ctrl+C no terminal e 'uv run streamlit run dsa_app.py'
+  de novo): o .env e lido na partida.
+
+  Se der erro 404 de modelo, veja os nomes validos da SUA conta:
+
+      uv run python dsa_lista_modelos.py
+
+
+--------------------------------------------------------------------------------
+7. ROTINA DE USO (o dia a dia)
+--------------------------------------------------------------------------------
+
+  Depois da instalacao feita uma unica vez, o dia a dia e curto:
+
+      cd ~/projects/dsa/12-Projeto
+      code .
+
+  Para o APP:
+
+      uv run streamlit run dsa_app.py
+
+  Abra http://localhost:8501 no navegador, digite um ticker (MSFT, TSLA,
+  AMZN, GOOG) e clique em Analisar.
+
+  Para o NOTEBOOK:
+
+      abra Projeto_DayTrade_Analytics_IA.ipynb e escolha o kernel .venv
+
+  Para rodar na AWS EC2, veja a secao 9. O comando e o mesmo, com duas
+  flags a mais (--server.address=0.0.0.0 --server.headless=true); a
+  diferenca e que, em vez de 'nohup ... &', o app vira um servico do sistema
+  que sobe sozinho no boot e reinicia se cair.
+
+  O 'uv run' e o detalhe que evita a dor de cabeca mais comum: ele garante que
+  o comando rode com a .venv deste capitulo, sem voce ativar nada na mao.
+
+
+--------------------------------------------------------------------------------
+8. PROBLEMAS COMUNS
+--------------------------------------------------------------------------------
+
+  SINTOMA                          CAUSA PROVAVEL           SOLUCAO
+  -------------------------------- ------------------------ ---------------------
+
+  404 model_not_found              O modelo foi             Rode
+  "The model ... does not exist"   descontinuado pelo       dsa_lista_modelos.py,
+                                   provedor                 escolha um nome e
+                                                            ajuste GROQ_MODEL no
+                                                            .env
+
+  O agente de busca nunca acha     duckduckgo_search virou  Ja corrigido: o app
+  nada, mas nao da erro            casca vazia (renomeado   usa DSADuckDuckGo,
+                                   para ddgs)               escrita sobre o ddgs
+
+  "API key not set" com o .env     load_dotenv() procura o  Ja corrigido no
+  preenchido                       .env ao lado do script   dsa_app.py com
+                                                            Path(__file__)
+
+  ModuleNotFoundError              Kernel errado no         Select Kernel >
+  (streamlit, phi, yfinance...)    notebook, ou .venv nao   .venv (Python 3.12).
+                                   criada                   Ou rode 'uv sync'
+
+  "Select Kernel" nao aparece      Faltam extensoes no WSL  code --install-
+                                                            extension
+                                                            ms-python.python
+                                                            (uma de cada vez)
+
+  ERROR: This version requires     Instalador do Ollama     sudo apt-get install
+  zstd for extraction              sem o zstd               -y zstd
+
+  Ollama nao responde em           Ollama instalado no      Defina OLLAMA_HOST
+  localhost (WSL2)                 Windows, nao no Linux    com o IP do
+                                                            nameserver do
+                                                            /etc/resolv.conf
+
+  Graficos espremidos no app       st.plotly_chart usa o    Ja corrigido:
+                                   tamanho nativo           width="stretch"
+
+  Graficos em branco e tabela      Ticker inexistente. O    Ja corrigido: o app
+  vazia                            yfinance nao da erro,    checa 'if hist.empty'
+                                   devolve tabela vazia     e avisa
+
+  A caixa "Escolha o LLM" so       Nenhuma chave valida no  Preencha a chave no
+  mostra "Ollama (local)"          .env (vazia ou ainda     .env e reinicie o
+                                   com texto de exemplo)    app; confira com
+                                                            dsa_lista_modelos.py
+
+  "Nenhum motor de IA              Sem chave no .env E sem  Preencha uma chave
+  disponivel" e o app para         Ollama respondendo       ou rode 'ollama
+                                                            serve'; reinicie
+
+  "Ollama (local)" sumiu da        Ollama parado, ou em     ollama serve; no
+  caixa                            outro host (WSL2 x       WSL2 defina
+                                   Windows)                 OLLAMA_HOST (sec. 4)
+
+  Porta 8501 ja em uso             Outro Streamlit rodando  --server.port=8502
+
+  Respostas do modelo local sao    llama3.2 tem 3 bilhoes   Configure uma chave
+  fracas ou inventadas             de parametros: e pequeno de API, ou use um
+                                   para analise financeira  modelo local maior
+
+
+--------------------------------------------------------------------------------
+9. EXECUCAO NA AWS (AMBIENTE MODERNO)
+--------------------------------------------------------------------------------
+
+  A secao "Execucao na AWS" do material original (la em cima) continua valida
+  na ideia: alugar uma maquina na nuvem, instalar o app nela e abrir a porta
+  para o navegador. O que mudou e a ferramenta de cada passo.
+
+  PASSO ORIGINAL (aula)         | PASSO MODERNO (2026)
+  ------------------------------|-----------------------------------------------
+  Conta gratuita AWS            | Igual, mas o free tier mudou (9.1)
+  EC2 t2.micro, Amazon Linux 2  | t4g.micro (ARM) ou t3.micro, Ubuntu 24.04 LTS
+  SSH com arquivo .pem          | EC2 Instance Connect (botao "Conectar")
+  wget Miniconda3-latest...sh   | curl ... astral.sh/uv/install.sh | sh
+  Criar pasta app e copiar      | git clone do seu repositorio
+  pip install -r requirements   | uv sync
+  nohup streamlit run ... &     | servico systemd
+  http://IP:8501                | idem, ou Caddy com HTTPS na porta 443
+  Desligar pela console         | aws ec2 stop-instances (ou terminate)
+
+  9.1 A CONTA E O FREE TIER
+
+  Em julho de 2025 a AWS trocou o modelo de conta gratuita. Antes: 12 meses
+  de t2.micro gratis (750 h/mes). Agora: conta nova recebe CREDITOS (ate
+  US$ 200, validos por 6 meses) e escolhe entre o plano "Free" (nao cobra
+  nada; a conta e encerrada quando os creditos acabam ou os 6 meses passam)
+  e o plano "Paid" (cobra o que passar dos creditos). A EC2 consome credito
+  desde a primeira hora ligada.
+
+  Se escolher o plano Paid, ou se a sua conta e anterior a julho de 2025,
+  faca isto no primeiro dia, antes de criar qualquer instancia:
+
+      Console AWS > Billing > Budgets > Create budget > US$ 1,00 > seu e-mail
+
+  E um alarme: se a fatura passar de 1 dolar, voce recebe e-mail. Nao custa
+  nada e evita a historia classica da instancia esquecida ligada por um mes.
+
+  9.2 A INSTANCIA
+
+  No console: EC2 > Launch instance.
+
+      Nome            dsa-daytrade
+      Imagem (AMI)    Ubuntu Server 24.04 LTS
+      Arquitetura     64-bit (Arm)               <-- habilita a familia t4g
+      Tipo            t4g.micro (2 vCPU, 1 GB)   ou t3.micro se preferir x86
+      Par de chaves   "Proceed without a key pair" (usaremos Instance Connect)
+      Rede            deixe "Allow SSH" marcado; marque "Allow HTTPS" e
+                      "Allow HTTP" (portas 22, 443 e 80)
+      Disco           8 GB gp3 (o padrao basta)
+
+  Por que ARM: a familia t4g (processador Graviton) custa ~20% menos que a t3
+  equivalente, e o uv.lock deste projeto resolve nas duas arquiteturas sem
+  mudar nada -- todos os pacotes (pandas, numpy, pyarrow, lxml...) tem wheel
+  para aarch64.
+
+  Por que 1 GB e apertado: pandas + plotly + phidata + streamlit ocupam uns
+  400-500 MB em repouso. Sobra pouco para o pico de uma analise. A solucao e
+  criar um arquivo de swap (9.4), que da folga sem custar nada.
+
+  9.3 CONECTAR (sem .pem)
+
+  Selecione a instancia > botao "Conectar" > aba "EC2 Instance Connect" >
+  "Conectar". Abre um terminal dentro do navegador, ja logado como 'ubuntu'.
+
+  Nao precisa baixar chave, nao precisa de 'chmod 400', nao tem .pem para
+  perder: o Instance Connect injeta uma chave temporaria que vale 60
+  segundos. A porta 22 continua aberta, mas sem chave permanente nao ha o
+  que vazar. Quem quiser zero portas abertas usa o SSM Session Manager
+  (exige uma IAM role com AmazonSSMManagedInstanceCore na instancia).
+
+  Se preferir o SSH classico (ssh -i chave.pem ubuntu@IP), continua
+  funcionando: crie o par de chaves no lancamento e, no Security Group,
+  troque a origem da porta 22 de "Anywhere" para "My IP".
+
+  9.4 PREPARAR A MAQUINA (substitui o Miniconda)
+
+      # swap de 2 GB: folga de memoria para a instancia de 1 GB
+      sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile
+      sudo mkswap /swapfile && sudo swapon /swapfile
+      echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+
+      # uv: o mesmo instalador da secao 2, na mesma linha
+      curl -LsSf https://astral.sh/uv/install.sh | sh
+      source $HOME/.local/bin/env
+      uv --version
+
+  Compare com o original: 'wget Miniconda3-latest-Linux-x86_64.sh' baixava
+  ~100 MB, rodava um instalador interativo e criava um Python compartilhado.
+  O uv tem ~20 MB, instala em 2 segundos e baixa o Python 3.12 sozinho no
+  primeiro 'uv sync'. E o instalador e identico ao que voce usou no WSL.
+
+  9.5 TRAZER O CODIGO E AS CHAVES (substitui "crie a pasta app e copie")
+
+      git clone https://github.com/Rodrigo-Lopes-de-Andrade/agente-ai-01.git ~/app
+      cd ~/app
+      nano .env            # cole as chaves, igual ao seu .env local
+      chmod 600 .env       # so o dono le
+
+  O .env NAO esta no repositorio (o .gitignore o exclui, de proposito): chave
+  de API em repositorio publico e roubada por robo em minutos. Voce cria o
+  arquivo na instancia, na mao, uma unica vez. O conteudo e o mesmo da
+  secao 6.
+
+  O projeto ja esta no GitHub (repositorio acima). Sem git, a alternativa
+  seria copiar do WSL com scp ou rsync -- mas ai a cada alteracao voce copia
+  de novo. Com git, a atualizacao na instancia e 'git pull'.
+
+  9.6 INSTALAR AS DEPENDENCIAS (substitui pip install -r requirements.txt)
+
+      uv sync --no-dev
+
+  Um comando. O uv le o pyproject.toml, baixa o Python 3.12, cria a .venv e
+  instala as versoes exatas do uv.lock -- as mesmas que funcionam na sua
+  maquina. Demora 1-2 minutos na t4g.micro.
+
+  O '--no-dev' pula o grupo [dependency-groups] dev do pyproject.toml, onde
+  ficam jupyter, ipykernel e ipywidgets: ferramentas de estudo que o servidor
+  nunca abriria (~200 MB). No WSL voce roda 'uv sync' sem a flag e o grupo
+  entra normalmente -- por isso o notebook continua funcionando la.
+
+  9.7 SUBIR O APP COMO SERVICO (substitui nohup ... &)
+
+  O 'nohup ... &' da aula funciona ate o primeiro reboot ou o primeiro
+  travamento: depois disso o app fica fora do ar ate alguem entrar e subir de
+  novo. Um servico systemd resolve os dois casos -- e e o jeito padrao de
+  rodar qualquer programa "para sempre" em Linux.
+
+      sudo tee /etc/systemd/system/dsa-app.service > /dev/null <<'EOF'
+      [Unit]
+      Description=DSA Day Trade Analytics (Streamlit)
+      After=network-online.target
+      Wants=network-online.target
+
+      [Service]
+      User=ubuntu
+      WorkingDirectory=/home/ubuntu/app
+      ExecStart=/home/ubuntu/.local/bin/uv run streamlit run dsa_app.py \
+          --server.port=8501 --server.address=0.0.0.0 --server.headless=true
+      Restart=always
+      RestartSec=5
+
+      [Install]
+      WantedBy=multi-user.target
+      EOF
+
+      sudo systemctl daemon-reload
+      sudo systemctl enable --now dsa-app     # liga agora E no boot
+      sudo systemctl status dsa-app           # espere "active (running)"
+
+  Comandos do dia a dia:
+
+      journalctl -u dsa-app -f                # logs ao vivo (Ctrl+C sai)
+      sudo systemctl restart dsa-app          # depois de um git pull
+      sudo systemctl stop dsa-app             # para sem desligar a maquina
+
+  Tres detalhes do arquivo acima:
+
+  - ExecStart usa o caminho completo do uv. Servicos nao leem o seu .bashrc,
+    entao 'uv' sozinho daria "command not found".
+  - --server.headless=true impede o Streamlit de tentar abrir um navegador
+    (nao existe navegador no servidor) e de perguntar o e-mail na primeira
+    execucao, o que travaria o servico esperando resposta.
+  - O .env e lido pelo load_dotenv() do dsa_app.py, que ja aponta para a
+    pasta do proprio script (secao 1, quebra 3). Nada a configurar.
+
+  9.8 ABRIR PARA O NAVEGADOR
+
+  Opcao A -- direto na porta 8501 (igual a aula)
+
+      Console > EC2 > Instancia > aba "Security" > Security group >
+      Edit inbound rules > Add rule:
+          Type: Custom TCP   Port: 8501   Source: My IP
+
+  Acesse http://IP_PUBLICO:8501. "My IP" em vez de "Anywhere" e de proposito:
+  so voce enxerga o app enquanto testa.
+
+  Opcao B -- HTTPS com Caddy (para mostrar a cliente)
+
+  Um endereco https://... com cadeado passa mais confianca que um IP com
+  porta. O Caddy e um servidor web que fica na frente do Streamlit, emite o
+  certificado sozinho (Let's Encrypt) e renova sem voce lembrar.
+
+  Precisa de um nome de dominio apontando para o IP. O DuckDNS da um gratis:
+  crie uma conta em duckdns.org, escolha um nome (ex.: dsa-daytrade) e cole o
+  IP publico da instancia.
+
+      sudo apt-get install -y caddy
+      echo 'dsa-daytrade.duckdns.org {
+          reverse_proxy localhost:8501
+      }' | sudo tee /etc/caddy/Caddyfile
+      sudo systemctl reload caddy
+
+  No Security Group: 80 e 443 abertas para "Anywhere" (ja estao, se marcou
+  as caixas no lancamento); a 8501 NAO precisa estar aberta, o Caddy fala
+  com ela por dentro da maquina. Acesse https://dsa-daytrade.duckdns.org.
+
+  O Streamlit usa WebSocket para atualizar a tela. Com Nginx isso exige tres
+  linhas de configuracao que todo mundo esquece; o Caddy repassa WebSocket
+  sem configurar nada -- e por isso a escolha aqui.
+
+  9.9 RESOLVENDO PROBLEMAS DE ACESSO
+
+  SINTOMA                          CAUSA PROVAVEL           SOLUCAO
+  -------------------------------- ------------------------ ---------------------
+
+  Navegador fica "carregando" e    Security Group sem a     Adicione a regra de
+  cai em timeout                   regra de entrada         entrada (9.8). E o
+                                                            motivo em 9 de cada
+                                                            10 casos
+
+  "Connection refused" na hora     App nao esta rodando,    systemctl status
+                                   ou escuta so em          dsa-app; confira o
+                                   localhost                --server.address
+
+  systemctl status mostra          .env ausente ou chave    journalctl -u
+  "failed" ou reiniciando          invalida; ou 'uv' nao    dsa-app -n 50 mostra
+  em loop                          encontrado               o erro exato
+
+  Funcionava, parou depois de      IP publico muda a cada   Aloque um Elastic IP
+  parar e ligar a instancia        stop/start               (EC2 > Elastic IPs >
+                                                            Allocate, Associate)
+
+  Pagina abre, mas fica em         Proxy sem suporte a      Use Caddy (9.8) ou
+  "Please wait..." para sempre     WebSocket                configure Upgrade no
+                                                            Nginx
+
+  Tudo lento ou o app cai no       Memoria esgotada         Confira 'free -h';
+  meio da analise                  (1 GB sem swap)          crie o swap (9.4)
+
+  Sobre o Elastic IP: enquanto esta associado a uma instancia ligada, custa o
+  mesmo que o IP publico comum (a AWS cobra por IPv4 desde 2024, ~US$ 3,60
+  por mes, coberto pelos creditos). Desassociado, cobra igual e nao serve
+  para nada -- libere ("Release") quando terminar.
+
+  9.10 MONETIZACAO
+
+  A aula deixa em aberto. Duas pecas que faltam para cobrar de um cliente:
+
+  - LOGIN. O Streamlit tem st.login() nativo desde a versao 1.42: autentica
+    via Google, Microsoft, Auth0 ou qualquer provedor OIDC, sem escrever tela
+    de senha. Configura-se em .streamlit/secrets.toml, na secao [auth].
+  - COBRANCA. Stripe Payment Links gera um link de pagamento sem codigo; o
+    app libera o acesso conferindo o e-mail logado (st.user.email) contra a
+    lista de assinantes.
+
+  9.11 DESLIGAR AO TERMINAR
+
+  Pela console: EC2 > Instancia > Instance state > Stop (ou Terminate).
+
+  Pela linha de comando, se tiver o AWS CLI configurado no WSL:
+
+      aws ec2 stop-instances --instance-ids i-0123456789abcdef0
+      aws ec2 terminate-instances --instance-ids i-0123456789abcdef0
+
+  STOP pausa: a CPU deixa de cobrar, mas o disco (8 GB, centavos) e o IP
+  continuam. Volta exatamente como estava. TERMINATE apaga a maquina e o
+  disco: custo zero, mas refaz-se tudo de 9.2 em diante (com git clone e
+  systemd, isso leva 10 minutos).
+
+  Para nao depender da memoria: EC2 > Instancia > aba "Monitoring" > Create
+  alarm > acao "Stop this instance" quando CPU < 5% por 2 horas. A propria
+  AWS desliga a maquina esquecida.
+
+  9.12 E SE PULAR A EC2?
+
+  O curso usa EC2 porque ensinar AWS e parte do objetivo. Para o app em si,
+  existe caminho com menos manutencao:
+
+  - STREAMLIT COMMUNITY CLOUD (share.streamlit.io): gratis, faz deploy
+    direto do repositorio GitHub, HTTPS pronto, gerenciador de secrets para
+    as chaves de API. Le o uv.lock. Zero servidor para cuidar. Limite:
+    recursos modestos e o app "dorme" apos alguns dias sem acesso. E o
+    caminho da SECAO 10, passo a passo.
+
+  - CONTAINER (AWS App Runner, Lightsail Containers, Fly.io): um Dockerfile
+    de 10 linhas com uv, e o provedor cuida de HTTPS, reinicio e escala.
+    Custa um pouco mais que a EC2 crua, cobra menos em horas suas.
+
+  A EC2 continua sendo a escolha certa para APRENDER como as pecas se
+  encaixam -- o que e exatamente o que esta secao fez.
+
+
+--------------------------------------------------------------------------------
+10. DEPLOY NO STREAMLIT COMMUNITY CLOUD (PASSO A PASSO MANUAL)
+--------------------------------------------------------------------------------
+
+  A secao 9 mostra o caminho da aula: uma maquina alugada na AWS. Esta secao
+  mostra o caminho sem servidor nenhum para cuidar: o Streamlit Community
+  Cloud, servico gratuito da propria equipe do Streamlit. Ele le o seu
+  repositorio no GitHub e publica o app em https://SEU-NOME.streamlit.app,
+  com HTTPS pronto.
+
+  Nao existe API nem linha de comando para a primeira publicacao: ela e
+  feita no navegador, em cinco passos (10.3). Depois disso, todo 'git push'
+  republica o app sozinho.
+
+  10.1 POR QUE NAO A VERCEL (OU OUTRA PLATAFORMA SERVERLESS)
+
+  A pergunta e natural: a Vercel e a plataforma de deploy mais conhecida e,
+  desde julho de 2026, aceita ate WebSocket em funcoes Python. Mesmo assim o
+  Streamlit nao roda la, por tres motivos -- e cada um sozinho ja basta:
+
+  1) A Vercel executa apps ASGI/WSGI (FastAPI, Flask, Django): um objeto
+     'app' que ela chama a cada requisicao. O Streamlit e um servidor
+     completo (Tornado) que abre a porta 8501 e serve HTML, WebSocket e
+     arquivos estaticos ele mesmo. Nao existe adaptador; nao ha como
+     "exportar" o Streamlit como funcao.
+  2) Uma funcao serverless nasce, responde e morre. O Streamlit guarda a
+     sessao do usuario (ticker digitado, resultado da analise) na memoria
+     do processo. Quando a funcao expira, a conexao cai, e a reconexao pode
+     chegar em outra instancia, que nao sabe de nada: a tela reseta ou
+     trava em "Please wait...".
+  3) Funcoes Python da Vercel tem limite de 250 MB descompactados. pyarrow
+     + pandas + numpy + plotly + lxml + phidata passam disso com folga.
+
+  Resumindo: serverless e o oposto do que o Streamlit precisa, que e um
+  processo vivo enquanto o usuario estiver com a pagina aberta. Plataformas
+  que mantem esse processo: Streamlit Community Cloud (esta secao), Hugging
+  Face Spaces, Render, Railway, Fly.io -- ou uma EC2 (secao 9).
+
+  Caberia na Vercel um app REESCRITO: backend FastAPI (reaproveitando
+  dsa_extrai_dados, os graficos Plotly como JSON e os tres agentes) e um
+  frontend em Next.js ou HTML. E outro projeto, que abandona o Streamlit --
+  justamente a ferramenta que o capitulo ensina.
+
+  10.2 O QUE O PROJETO JA TEM PRONTO
+
+  - Repositorio no GitHub (publico):
+        https://github.com/Rodrigo-Lopes-de-Andrade/agente-ai-01
+  - uv.lock: o Community Cloud reconhece e roda 'uv sync' com ele, entao
+    instala exatamente as versoes que funcionam na sua maquina. Detalhes:
+    ele tambem ve o requirements.txt historico e avisa "more than one
+    requirements file" -- e so um aviso, o uv.lock tem precedencia; e o
+    grupo dev (Jupyter) e instalado junto, o que so alonga a construcao.
+  - .python-version = 3.12, que o uv respeita.
+  - .env fora do git (.gitignore). Na nuvem as chaves entram pelo painel de
+    Secrets (10.4). O .streamlit/secrets.toml, se voce criar um localmente,
+    tambem esta no .gitignore.
+  - O app pergunta ao Ollama se ele esta no ar antes de oferece-lo na caixa
+    "Escolha o LLM". Na nuvem nao ha Ollama, entao a caixa mostra so os
+    provedores com chave -- e, sem chave nenhuma, avisa e para.
+
+  10.3 PUBLICAR (cinco passos no navegador)
+
+  1) Entre em https://share.streamlit.io e clique em "Continue with GitHub".
+     Autorize o Streamlit a ler seus repositorios. Ele instala o app
+     "Streamlit" na sua conta GitHub; pode restringir a permissao so ao
+     repositorio agente-ai-01.
+
+  2) Clique em "Create app" > "Deploy a public app from GitHub". Ou abra o
+     link abaixo, que ja chega com o formulario preenchido:
+
+  https://share.streamlit.io/deploy?repository=Rodrigo-Lopes-de-Andrade/agente-ai-01&branch=main&mainModule=dsa_app.py
+
+  3) Confira o formulario:
+
+        Repository        Rodrigo-Lopes-de-Andrade/agente-ai-01
+        Branch            main
+        Main file path    dsa_app.py
+        App URL           escolha um nome, ex.: dsa-daytrade
+                          (vira https://dsa-daytrade.streamlit.app)
+
+  4) Clique em "Advanced settings...":
+
+        Python version    3.12
+        Secrets           cole o bloco da secao 10.4
+
+  5) Clique em "Deploy!". A primeira construcao leva 3-5 minutos (o uv baixa
+     o Python e instala os pacotes). A tela mostra o log ao vivo; quando
+     aparecer "Your app is live", abra a URL. Digite MSFT e clique em
+     Analisar para confirmar que o LLM responde.
+
+  10.4 SECRETS: AS CHAVES NA NUVEM
+
+  Na sua maquina as chaves vivem no .env. Na nuvem nao existe .env -- e nem
+  poderia: ele nao vai para o GitHub. O Community Cloud tem um painel
+  proprio de Secrets, em formato TOML (chave = "valor", uma por linha). Cole
+  ali o mesmo conteudo do seu .env, com ASPAS nos valores:
+
+        GROQ_API_KEY = "gsk_..."
+        GROQ_MODEL = "openai/gpt-oss-120b"
+        OPENAI_API_KEY = "sk-..."
+        OPENAI_MODEL = "gpt-4o-mini"
+
+  Por que o app nao precisou mudar: o Streamlit expoe os secrets de nivel
+  raiz TAMBEM como variaveis de ambiente, na partida do servidor. O
+  os.getenv("GROQ_API_KEY") do dsa_app.py encontra a chave do mesmo jeito
+  que encontrava a do .env. Nao use secoes ([grupo]) no TOML: so o nivel
+  raiz vira variavel de ambiente.
+
+  Para mudar uma chave depois: painel do app em share.streamlit.io > menu
+  "..." > Settings > Secrets. O app reinicia sozinho.
+
+  Nao coloque OLLAMA_HOST nos secrets: nao ha Ollama na nuvem, e o app ja
+  esconde a opcao quando nao encontra o servidor.
+
+  10.5 ATUALIZAR O APP DEPOIS
+
+  Todo push no branch main republica o app em cerca de um minuto:
+
+        git add -A
+        git commit -m "descricao da mudanca"
+        git push
+
+  Se mudar dependencias ('uv add ...'), o uv.lock muda junto e vai no mesmo
+  commit; o Community Cloud reinstala.
+
+  Para reconstruir sem mudar codigo: painel do app > "..." > Reboot app.
+  Para apagar: "..." > Delete app.
+
+  10.6 LIMITES DO PLANO GRATUITO
+
+  - Recursos modestos (RAM e CPU compartilhados). O app cabe, e uma analise
+    leva os mesmos 30-90 segundos que leva na sua maquina: o tempo e do
+    LLM, nao do servidor.
+  - O app "dorme" depois de alguns dias sem ninguem abrir. A visita seguinte
+    demora cerca de um minuto para acorda-lo. Nada se perde.
+  - Repositorio publico: qualquer pessoa ve o codigo (as chaves nao: elas
+    ficam nos secrets). Repositorio privado tambem funciona, mas o plano
+    gratuito permite um unico app privado.
+  - Nao ha Ollama nem GPU: um provedor em nuvem (Groq, OpenAI...) e
+    obrigatorio.
+
+  10.7 PROBLEMAS COMUNS NO DEPLOY
+
+  SINTOMA                          CAUSA PROVAVEL           SOLUCAO
+  -------------------------------- ------------------------ ---------------------
+
+  "Nenhum motor de IA              Secrets vazios, ou sem   Settings > Secrets:
+  disponivel" na barra lateral     aspas nos valores        chave = "valor",
+                                                            uma por linha
+
+  404 model_not_found              Modelo descontinuado     Ajuste *_MODEL nos
+                                                            secrets; nomes
+                                                            validos: rode
+                                                            dsa_lista_modelos.py
+                                                            na sua maquina
+
+  O repositorio nao aparece na     Autorizacao do GitHub    share.streamlit.io >
+  lista ao criar o app             nao inclui o repo        Settings > Linked
+                                                            accounts > GitHub
+
+  Log de construcao para em        Falta pacote do sistema  Crie packages.txt na
+  "error: ... No such file"        (raro: quase tudo vem    raiz com o nome apt
+                                   como wheel pronto)       do pacote
+
+  "This app has gone to sleep"     Dias sem acesso          Clique em "Yes, get
+                                                            this app back up"
+
+
+--------------------------------------------------------------------------------
+11. RESUMO DOS COMANDOS
+--------------------------------------------------------------------------------
+
+  INSTALACAO (uma vez so)
+      curl -LsSf https://astral.sh/uv/install.sh | sh
+      source $HOME/.local/bin/env
+      cd ~/projects/dsa/12-Projeto
+      uv sync
+      sudo apt-get install -y zstd
+      curl -fsSL https://ollama.com/install.sh | sh
+      ollama pull llama3.2
+      uv run python -m ipykernel install --user --name dsa-12-projeto-daytrade \
+          --display-name "Python (uv) - DSA 12 Projeto Day Trade"
+
+  DIA A DIA
+      cd ~/projects/dsa/12-Projeto
+      code .
+      uv run streamlit run dsa_app.py
+
+  AWS EC2 (Ubuntu 24.04, via EC2 Instance Connect)
+      sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile
+      sudo mkswap /swapfile && sudo swapon /swapfile
+      curl -LsSf https://astral.sh/uv/install.sh | sh
+      source $HOME/.local/bin/env
+      git clone https://github.com/Rodrigo-Lopes-de-Andrade/agente-ai-01.git ~/app
+      cd ~/app && nano .env && chmod 600 .env
+      uv sync --no-dev
+      sudo systemctl enable --now dsa-app   # apos criar o .service (9.7)
+      journalctl -u dsa-app -f              # logs
+      aws ec2 stop-instances --instance-ids i-...   # ao terminar
+
+  STREAMLIT COMMUNITY CLOUD (secao 10)
+      git add -A && git commit -m "..." && git push   # republica sozinho
+      https://share.streamlit.io                       # painel do app
+      # primeira publicacao: link pre-preenchido em 10.3, passo 2
+
+  APOIO
+      uv run python dsa_lista_modelos.py   # nomes de modelo validos hoje
+      uv run jupyter lab                   # Jupyter no navegador
+      uv sync --upgrade                    # atualiza dentro dos limites
+      uv add nome-do-pacote                # acrescenta dependencia
+      ollama list                          # modelos locais baixados
+      code --list-extensions               # extensoes do VSCode no WSL
+
+  ARQUIVOS DA PASTA
+      dsa_app.py                          o app (modernizado, original comentado)
+      Projeto_DayTrade_Analytics_IA.ipynb  notebook-aula, peca por peca
+      dsa_lista_modelos.py                 lista modelos validos por provedor
+      pyproject.toml                       dependencias (limites inferiores;
+                                           grupo dev = notebook)
+      uv.lock                              versoes exatas instaladas
+      .env                                 suas chaves de API (nao versionar)
+      .streamlit/secrets.toml              idem, formato do Community Cloud
+                                           (opcional local; nao versionar)
+      .python-version                      fixa o Python em 3.12
+      .vscode/                             interpretador e recomendacoes
+      requirements.txt                     ORIGINAL, registro historico
+      LEIAME.txt                           este arquivo
+
+
+================================================================================
+FIM DA SECAO DO AMBIENTE MODERNO
+================================================================================
+
+
+================================================================================
+VERSAO NODE.JS (Next.js + Vercel)
+================================================================================
+
+A reescrita descrita na secao 10.1 ("caberia na Vercel um app REESCRITO")
+foi feita. Ela vive nesta mesma pasta, ao lado dos arquivos Python, e tem
+guia proprio:
+
+    LEIAME-NODEJS.txt
+
+Para rodar:  npm install  e  npm run dev  (http://localhost:3000).
+O .env desta versao serve sem mudar nada.

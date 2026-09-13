@@ -1,0 +1,239 @@
+/* Módulo Especial de Consultoria na Área de Dados com Agentes de IA
+ * VERSAO NODE.JS (Next.js + Vercel) -- arquivo: app/globals.css
+ *
+ * O Streamlit desenhava a tela sozinho (barra lateral cinza, botao, caixas
+ * verde/vermelha/azul de sucesso/erro/info). No Next.js quem desenha somos
+ * nos, com CSS. Este arquivo reproduz o visual do Streamlit -- as cores sao as
+ * do tema padrao dele -- para o app ficar reconhecivel para quem viu a aula.
+ *
+ * Convencao: toda classe comeca com "dsa-", para ficar claro o que e nosso.
+ */
+
+/* ---------- Variaveis de cor (as do tema claro do Streamlit) ---------- */
+:root {
+  --dsa-texto: #31333f;
+  --dsa-fundo: #ffffff;
+  --dsa-fundo-lateral: #f0f2f6;
+  --dsa-borda: rgba(49, 51, 63, 0.2);
+  --dsa-primaria: #ff4b4b;
+  --dsa-sucesso-fundo: #dffde9;
+  --dsa-sucesso-texto: #177233;
+  --dsa-erro-fundo: #ffecec;
+  --dsa-erro-texto: #7d353b;
+  --dsa-info-fundo: #e1f0fb;
+  --dsa-info-texto: #004280;
+}
+
+/* ---------- Base ---------- */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--dsa-fundo);
+  color: var(--dsa-texto);
+  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+a {
+  color: var(--dsa-primaria);
+}
+
+/* ---------- Estrutura: barra lateral + conteudo (layout="wide") ---------- */
+.dsa-app {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.dsa-lateral {
+  background: var(--dsa-fundo-lateral);
+  padding: 1.5rem 1.25rem 3rem;
+  overflow-y: auto;
+}
+
+.dsa-principal {
+  padding: 2rem 3rem 4rem;
+  min-width: 0; /* deixa os graficos encolherem junto com a coluna */
+}
+
+/* Em telas estreitas (celular), a barra lateral vai para cima. */
+@media (max-width: 800px) {
+  .dsa-app {
+    grid-template-columns: 1fr;
+  }
+  .dsa-principal {
+    padding: 1.5rem 1rem 3rem;
+  }
+}
+
+/* ---------- Titulos ---------- */
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+}
+h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 1.5rem 0 1rem;
+}
+h3 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 2rem 0 0.75rem;
+}
+.dsa-lateral h2 {
+  font-size: 1.6rem;
+  margin-top: 0;
+}
+.dsa-lateral h3 {
+  font-size: 1.15rem;
+  margin-top: 1.5rem;
+}
+
+/* ---------- Formulario (st.text_input + st.button) ---------- */
+.dsa-form {
+  margin: 1rem 0 1.5rem;
+  max-width: 520px;
+}
+.dsa-form label {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 0.35rem;
+}
+.dsa-entrada,
+.dsa-select {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  font: inherit;
+  color: inherit;
+  background: var(--dsa-fundo);
+  border: 1px solid var(--dsa-borda);
+  border-radius: 8px;
+}
+.dsa-entrada:focus,
+.dsa-select:focus {
+  outline: none;
+  border-color: var(--dsa-primaria);
+  box-shadow: 0 0 0 1px var(--dsa-primaria);
+}
+.dsa-entrada {
+  text-transform: uppercase; /* o .upper() do Python, so que visual */
+}
+
+/* O botao "secundario" do Streamlit: branco, fica vermelho ao passar o mouse. */
+.dsa-botao {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  color: var(--dsa-texto);
+  background: var(--dsa-fundo);
+  border: 1px solid var(--dsa-borda);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.dsa-botao:hover:not(:disabled) {
+  color: var(--dsa-primaria);
+  border-color: var(--dsa-primaria);
+}
+.dsa-botao:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Caixas de mensagem (st.success / st.error / st.info) ---------- */
+.dsa-caixa {
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+.dsa-caixa p:first-child {
+  margin-top: 0;
+}
+.dsa-caixa p:last-child {
+  margin-bottom: 0;
+}
+.dsa-caixa-sucesso {
+  background: var(--dsa-sucesso-fundo);
+  color: var(--dsa-sucesso-texto);
+}
+.dsa-caixa-erro {
+  background: var(--dsa-erro-fundo);
+  color: var(--dsa-erro-texto);
+}
+.dsa-caixa-info {
+  background: var(--dsa-info-fundo);
+  color: var(--dsa-info-texto);
+}
+
+/* ---------- Spinner (st.spinner) ---------- */
+.dsa-spinner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1rem 0;
+  color: #555;
+}
+.dsa-spinner::before {
+  content: "";
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid var(--dsa-borda);
+  border-top-color: var(--dsa-primaria);
+  border-radius: 50%;
+  animation: dsa-gira 0.8s linear infinite;
+}
+@keyframes dsa-gira {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Markdown (st.markdown): tabelas e codigo ---------- */
+.dsa-markdown table {
+  border-collapse: collapse;
+  margin: 1rem 0;
+  width: 100%;
+  font-size: 0.95rem;
+}
+.dsa-markdown th,
+.dsa-markdown td {
+  border: 1px solid var(--dsa-borda);
+  padding: 0.4rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+.dsa-markdown th {
+  background: var(--dsa-fundo-lateral);
+}
+.dsa-markdown code {
+  background: var(--dsa-fundo-lateral);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.dsa-markdown pre code {
+  display: block;
+  padding: 0.75rem 1rem;
+  overflow-x: auto;
+}
+/* Tabelas largas rolam na horizontal em vez de estourar a pagina. */
+.dsa-markdown {
+  overflow-x: auto;
+}
+
+/* ---------- Graficos (st.plotly_chart com width="stretch") ---------- */
+.dsa-grafico {
+  width: 100%;
+  height: 450px;
+  margin: 0.5rem 0 1.5rem;
+}
