@@ -11,6 +11,9 @@ Este e o app do capitulo 12 (Day Trade Analytics em Tempo Real com Agentes de
 IA) reescrito em Node.js: telas em React/Next.js, rotas de API em Node.js e
 agentes com o AI SDK da Vercel. Tudo em uma linguagem, um projeto, um deploy.
 
+    App no ar:     https://agente-ai-01-nodejs.vercel.app
+    Codigo:        https://github.com/Rodrigo-Lopes-de-Andrade/agente-ai-01-nodejs
+
 O app original do curso e em Python/Streamlit e nao roda na Vercel (ele
 precisa de um processo vivo; a Vercel executa funcoes que nascem, respondem
 e morrem). A versao Python, modernizada, esta em outro repositorio:
@@ -382,6 +385,11 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
   'npm install' e 'npm run build', publica em https://SEU-PROJETO.vercel.app
   com HTTPS pronto, e republica a cada 'git push'. Nao ha servidor para
   cuidar, nao ha porta para abrir.
+
+  Este projeto ja esta publicado: https://agente-ai-01-nodejs.vercel.app
+  (projeto "agente-ai-01-nodejs" na conta Vercel, ligado ao repositorio
+  GitHub de mesmo nome). O passo a passo abaixo e o que foi feito, para
+  repetir em outro projeto.
 
   8.1 CONTA E REPOSITORIO
 
