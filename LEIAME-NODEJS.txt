@@ -7,18 +7,18 @@
 VERSAO NODE.JS (2026) - Next.js + Vercel
 ================================================================================
 
-Este arquivo e o guia da versao Node.js do capitulo. O LEIAME.txt continua
-sendo o guia da versao Python/Streamlit (que fica na pasta, intacta, como
-referencia). Os dois apps fazem EXATAMENTE a mesma coisa; o que muda e a
-linguagem, o framework e o lugar onde rodam.
+Este e o app do capitulo 12 (Day Trade Analytics em Tempo Real com Agentes de
+IA) reescrito em Node.js: telas em React/Next.js, rotas de API em Node.js e
+agentes com o AI SDK da Vercel. Tudo em uma linguagem, um projeto, um deploy.
 
-Por que existe esta versao: a secao 10.1 do LEIAME.txt explica que o Streamlit
-nao roda na Vercel -- ele precisa de um processo vivo, e a Vercel executa
-funcoes que nascem, respondem e morrem. La mesmo esta escrito: "caberia na
-Vercel um app REESCRITO... e outro projeto". Este e esse projeto.
+O app original do curso e em Python/Streamlit e nao roda na Vercel (ele
+precisa de um processo vivo; a Vercel executa funcoes que nascem, respondem
+e morrem). A versao Python, modernizada, esta em outro repositorio:
 
-Regra de leitura: TODO arquivo novo tem, comentado, o trecho Python que ele
-substitui, dentro de um bloco assim:
+    https://github.com/Rodrigo-Lopes-de-Andrade/agente-ai-01
+
+Regra de leitura: TODO arquivo deste projeto tem, comentado, o trecho Python
+que ele substitui, seguido do motivo da mudanca. O bloco e assim:
 
     // ====================================================================
     // CODIGO ORIGINAL (Python -- mantido comentado para referencia)
@@ -31,8 +31,8 @@ substitui, dentro de um bloco assim:
     // ====================================================================
     <o codigo novo>
 
-Leia os arquivos nessa ordem e voce tera visto o app inteiro em paralelo com
-o Python: lib/dsa-tipos.ts > lib/dsa-provedores.ts > lib/dsa-dados.ts >
+Leia os arquivos nesta ordem e voce tera visto o app inteiro:
+lib/dsa-tipos.ts > lib/dsa-provedores.ts > lib/dsa-dados.ts >
 lib/dsa-ferramentas.ts > lib/dsa-agentes.ts > app/api/*/route.ts >
 app/layout.tsx > app/page.tsx > components/*.tsx.
 
@@ -50,14 +50,13 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
 #  Abra http://localhost:3000, digite MSFT e clique em Analisar.               #
 #                                                                              #
 #  Precisa existir um arquivo .env com pelo menos uma chave de API             #
-#  preenchida (secao 6), ou um Ollama rodando na maquina. Sem nenhum dos       #
+#  preenchida (secao 5), ou um Ollama rodando na maquina. Sem nenhum dos       #
 #  dois a barra lateral avisa "Nenhum motor de IA disponivel" e o botao        #
 #  Analisar fica desabilitado.                                                 #
 #                                                                              #
-#  Precisa do Node.js 22 ou mais novo (secao 3). Confira:  node --version      #
+#  Precisa do Node.js 22 ou mais novo (secao 2). Confira:  node --version      #
 #                                                                              #
-#  NAO precisa do Python, da .venv, do uv nem do Anaconda. Nada da versao      #
-#  Python e usado pela versao Node.js -- as duas apenas dividem a pasta.       #
+#  NAO precisa de Python, uv nem Anaconda: este projeto e 100% Node.js.        #
 #                                                                              #
 ################################################################################
 
@@ -66,7 +65,7 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
 1. O QUE MUDOU (ANTES x DEPOIS)
 --------------------------------------------------------------------------------
 
-  ASSUNTO                  | PYTHON (dsa_app.py)       | NODE.JS (esta versao)
+  ASSUNTO                  | ORIGINAL (Python)         | ESTA VERSAO (Node.js)
   -------------------------|---------------------------|-----------------------
   Linguagem                 | Python 3.12               | TypeScript (JavaScript
                             |                           | com tipos) no Node 22+
@@ -90,10 +89,8 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
                             |                           | (sem biblioteca)
   Gerenciador de pacotes    | uv (pyproject + uv.lock)  | npm (package.json +
                             |                           | package-lock.json)
-  Ambiente isolado          | .venv/                    | node_modules/
   Rodar local               | uv run streamlit run ...  | npm run dev
-  Listar modelos validos    | uv run python             | npm run modelos
-                            |   dsa_lista_modelos.py    |
+  Listar modelos validos    | dsa_lista_modelos.py      | npm run modelos
   Deploy                    | EC2 + systemd, ou         | Vercel (git push
                             | Streamlit Community Cloud | publica sozinho)
   Tempo de uma analise      | 30-90 s (tempo do LLM)    | igual: e o LLM
@@ -101,62 +98,42 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
   O que NAO mudou: os tres agentes (nomes, instrucoes, ferramentas), a
   pergunta feita a eles, os quatro graficos, a barra lateral com o seletor
   de LLM, as mensagens de erro explicadas, a regra "ticker inexistente nao
-  gasta LLM". Coloque os dois apps lado a lado: sao iguais.
+  gasta LLM".
 
-  As pegadinhas que apareceram DE NOVO, so que em Node.js:
+  A licao central do capitulo sobrevive a troca de linguagem: os agentes NAO
+  sabem quem e o LLM. Trocar de provedor e trocar o objeto passado em
+  "model:" -- em lib/dsa-agentes.ts isso fica ainda mais visivel.
 
-  1) BUSCA NA WEB QUEBRADA. Em Python, o duckduckgo_search tinha virado casca
-     vazia. Em Node.js, o pacote duck-duck-scrape cai na deteccao anti-robo
-     do DuckDuckGo na primeira busca de texto. Testamos antes de escolher, e
-     a solucao foi nao usar pacote nenhum: lib/dsa-ferramentas.ts baixa a
-     pagina HTML de resultados com um fetch e recorta titulo/link/resumo.
+  As pegadinhas encontradas (e ja tratadas) ao portar:
 
-  2) TICKER INEXISTENTE. O yfinance devolvia tabela vazia; o yahoo-finance2
-     LANCA ERRO ("No data found, symbol may be delisted"). A rota
+  1) BUSCA NA WEB QUEBRADA. O pacote npm mais usado (duck-duck-scrape) cai na
+     deteccao anti-robo do DuckDuckGo na primeira busca de texto. Testamos
+     antes de escolher, e a solucao foi nao usar pacote nenhum:
+     lib/dsa-ferramentas.ts baixa a pagina HTML de resultados com um fetch e
+     recorta titulo/link/resumo.
+
+  2) TICKER INEXISTENTE. O yahoo-finance2 LANCA ERRO ("No data found, symbol
+     may be delisted") em vez de devolver tabela vazia. A rota
      app/api/dados/route.ts trata os dois casos e responde 404.
 
-  3) MODELOS DESCONTINUADOS. Continua valendo. 'npm run modelos' lista os
-     validos na sua conta. O modelo padrao da Anthropic subiu para
-     claude-sonnet-5 (familia atual); Groq e OpenAI continuam com
-     openai/gpt-oss-120b e gpt-4o-mini, conferidos em setembro de 2026.
+  3) MODELOS DESCONTINUADOS. Nomes de modelo saem do ar sem aviso (foi o que
+     aconteceu com os dois modelos do video do curso). 'npm run modelos'
+     lista os validos na sua conta. Padroes: openai/gpt-oss-120b (Groq),
+     gpt-4o-mini (OpenAI), claude-sonnet-5 (Anthropic), grok-4 (xAI),
+     llama3.2 (Ollama) -- conferidos em setembro de 2026.
 
 
 --------------------------------------------------------------------------------
-2. POR QUE TUDO EM NODE.JS (E NAO SO O FRONT-END)
+2. INSTALAR O NODE.JS
 --------------------------------------------------------------------------------
 
-  Tres caminhos eram possiveis. Este projeto escolheu o primeiro:
+  O Node.js e o programa que executa JavaScript fora do navegador (o papel
+  que o interpretador python tem para o Python). O projeto exige a versao
+  22 ou mais nova: o yahoo-finance2 e o Next.js 16 nao rodam em versoes
+  anteriores.
 
-  A) TUDO EM NODE.JS (escolhido). Um unico projeto Next.js: telas em React,
-     rotas de API em Node.js, agentes com o AI SDK. Um deploy, uma linguagem,
-     e o aluno ganha o comparativo Python x Node lado a lado em cada arquivo.
-
-  B) FRONT NEXT.JS + BACK-END PYTHON (FastAPI) NA VERCEL. Reaproveitaria o
-     phidata e o yfinance como estao, numa pasta api/ em Python no mesmo
-     repositorio. Duas linguagens no mesmo deploy, e o pacote Python
-     (pandas + numpy + phidata + SDKs) beira o limite de 250 MB das funcoes.
-
-  C) FRONT NEXT.JS NA VERCEL + FASTAPI FORA (EC2, Render, Railway). Zero
-     mudanca nos agentes, mas dois deploys, CORS para configurar e um
-     servidor para cuidar -- justamente o que a Vercel evita.
-
-  A licao que sobrevive a troca de linguagem e a mesma do capitulo: os
-  agentes NAO sabem quem e o LLM. Trocar de provedor e trocar o objeto
-  passado em "model:". Em lib/dsa-agentes.ts isso fica ainda mais visivel.
-
-
---------------------------------------------------------------------------------
-3. INSTALAR O NODE.JS
---------------------------------------------------------------------------------
-
-  O Node.js e para o JavaScript o que o interpretador python e para o Python:
-  o programa que executa o codigo fora do navegador. O projeto exige a versao
-  22 ou mais nova (o yahoo-finance2 e o Next.js 16 nao rodam em versoes
-  anteriores).
-
-  O jeito recomendado no WSL/Linux/macOS e o nvm (Node Version Manager) -- o
-  equivalente ao "uv python install": permite ter varias versoes lado a lado
-  e trocar por projeto, sem sudo.
+  O jeito recomendado no WSL/Linux/macOS e o nvm (Node Version Manager):
+  permite ter varias versoes lado a lado e trocar por projeto, sem sudo.
 
       curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.7/install.sh | bash
       source ~/.bashrc          # ou ~/.zshrc
@@ -170,33 +147,31 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
       node --version            # v22.x ou v24.x
       npm --version             # vem junto com o Node
 
-  O npm e o gerenciador de pacotes (o pip/uv do JavaScript). Ele ja vem com
-  o Node; nao ha nada mais para instalar.
+  O npm e o gerenciador de pacotes do JavaScript. Ja vem com o Node; nao ha
+  nada mais para instalar.
 
 
 --------------------------------------------------------------------------------
-4. CRIAR O AMBIENTE DO PROJETO
+3. CRIAR O AMBIENTE DO PROJETO
 --------------------------------------------------------------------------------
 
       cd ~/projects/dsa/12-Projeto-NodeJS
       npm install
 
   So isso. O npm le o package.json, baixa os pacotes para a pasta
-  node_modules/ e grava as versoes exatas em package-lock.json.
+  node_modules/ (~400 MB) e grava as versoes exatas em package-lock.json.
+  Assim, qualquer maquina que rode 'npm install' recebe as MESMAS versoes
+  que funcionam na sua. A pasta node_modules esta no .gitignore: nunca vai
+  para o GitHub, e recriada a partir do package-lock.json.
 
-  A correspondencia com o mundo Python:
+  Comandos do dia a dia com o npm:
 
-      pyproject.toml    ->  package.json        (o que o projeto precisa)
-      uv.lock           ->  package-lock.json   (a foto exata do instalado)
-      .venv/            ->  node_modules/       (os pacotes em si; ~400 MB)
-      uv sync           ->  npm install
-      uv add pacote     ->  npm install pacote
-      uv run comando    ->  npm run comando     (scripts do package.json)
+      npm install               instala tudo do package.json
+      npm install <pacote>      acrescenta um pacote (e atualiza o lock)
+      npm run <script>          roda um dos scripts do package.json
+      npm outdated              mostra o que tem versao mais nova
 
-  As duas pastas pesadas (.venv e node_modules) estao no .gitignore: nunca
-  vao para o GitHub, sao recriadas a partir dos arquivos de lock.
-
-  4.1 O package.json EXPLICADO (o JSON nao aceita comentarios, entao eles
+  3.1 O package.json EXPLICADO (o JSON nao aceita comentarios, entao eles
       ficam aqui)
 
   "scripts" -- os comandos do projeto. 'npm run <nome>' executa cada um:
@@ -208,16 +183,15 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
 
   "dependencies" -- o que o app usa para rodar:
       next, react, react-dom       o framework e a biblioteca de telas
-      ai                           o AI SDK da Vercel (o phidata daqui)
+      ai                           o AI SDK da Vercel (agentes e ferramentas)
       @ai-sdk/groq, @ai-sdk/openai, @ai-sdk/anthropic, @ai-sdk/xai
                                    um pacote por provedor de LLM
       @ai-sdk/openai-compatible    para o Ollama, que fala o protocolo da OpenAI
       zod                          descreve os parametros das ferramentas
-                                   (o que os type hints faziam no phidata)
-      yahoo-finance2               cotacoes do Yahoo (o yfinance daqui)
+      yahoo-finance2               cotacoes, recomendacoes e noticias do Yahoo
       plotly.js-finance-dist-min   o Plotly, versao JS, so com os graficos
                                    de financas (1,2 MB em vez de 4,5 MB)
-      react-markdown, remark-gfm   desenham Markdown com tabelas (st.markdown)
+      react-markdown, remark-gfm   desenham Markdown com tabelas
 
   "devDependencies" -- so para desenvolver, nao vao para o app final:
       typescript                   o compilador que confere os tipos
@@ -226,24 +200,25 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
 
   "engines": { "node": ">=22" } -- avisa (e a Vercel obedece) qual Node usar.
 
-  4.2 O QUE E O TYPESCRIPT
+  3.2 O QUE E O TYPESCRIPT
 
   JavaScript com anotacoes de tipo, como os type hints do Python
-  (def f(ticker: str) -> DataFrame). A diferenca: o TypeScript CONFERE os
-  tipos antes de rodar (npm run typecheck), entao "chamei .close mas o campo
-  se chama .fechamento" aparece no editor, nao na tela do cliente. Os
-  arquivos .ts (logica) e .tsx (telas, com JSX) sao TypeScript; o Next.js os
-  compila sozinho.
+  (def f(ticker: str)). A diferenca: o TypeScript CONFERE os tipos antes de
+  rodar (npm run typecheck), entao "chamei .close mas o campo se chama
+  .fechamento" aparece no editor, nao na tela do cliente. Os arquivos .ts
+  (logica) e .tsx (telas, com JSX) sao TypeScript; o Next.js os compila
+  sozinho.
 
 
 --------------------------------------------------------------------------------
-5. MAPA DOS ARQUIVOS: O dsa_app.py VIROU 12 ARQUIVOS
+4. MAPA DOS ARQUIVOS: O dsa_app.py VIROU 12 ARQUIVOS
 --------------------------------------------------------------------------------
 
-  O Streamlit permite um arquivo so porque tela e logica moram no mesmo
+  O Streamlit permitia um arquivo so porque tela e logica moravam no mesmo
   processo. No Next.js, o que roda no SERVIDOR e o que roda no NAVEGADOR
   ficam em arquivos separados -- e e essa separacao que permite o deploy na
-  Vercel. Onde cada trecho foi parar:
+  Vercel. Cada trecho do dsa_app.py aparece comentado no arquivo Node.js
+  que o substitui. Onde cada um foi parar:
 
   SECAO DO dsa_app.py                       | ARQUIVO NODE.JS
   ------------------------------------------|-----------------------------------
@@ -274,44 +249,69 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
   (nao havia)                               | app/globals.css (o visual do Streamlit)
 
   A regra para saber onde algo roda: arquivos em app/api/ e lib/ rodam no
-  servidor (Node.js, na Vercel viram funcoes); arquivos que comecam com
+  servidor (Node.js; na Vercel viram funcoes); arquivos que comecam com
   "use client" rodam no navegador. As chaves de API so existem nos do
   servidor. A rota /api/provedores devolve apelido e modelo -- NUNCA a chave.
 
 
 --------------------------------------------------------------------------------
-6. CHAVES DE API (.env)
+5. CHAVES DE API (.env)
 --------------------------------------------------------------------------------
 
-  Igual a versao Python: o arquivo .env na raiz da pasta guarda as chaves e
-  esta no .gitignore. Se voce ja tem o .env da versao Python, ELE SERVE SEM
-  MUDAR NADA -- as variaveis sao as mesmas (GROQ_API_KEY, GROQ_MODEL, ...).
-  Se nao tem, copie o modelo:
+  O arquivo .env na raiz da pasta guarda as chaves e esta no .gitignore.
+  Copie o modelo e preencha:
 
       cp .env.example .env
       nano .env             # cole as chaves
 
-  O que mudou por dentro: nao ha load_dotenv(). O Next.js le o .env sozinho
-  ao iniciar e cada linha vira process.env.NOME no servidor. Duas regras:
+  O Next.js le o .env sozinho ao iniciar; cada linha vira process.env.NOME no
+  servidor. Duas regras:
 
   - So o SERVIDOR enxerga o .env. O navegador nao. E assim de proposito.
   - Variaveis com prefixo NEXT_PUBLIC_ SAO enviadas ao navegador. Nenhuma
     chave deve ter esse prefixo, jamais.
 
   Mudou o .env? Reinicie o 'npm run dev' (Ctrl+C e de novo): ele e lido na
-  partida, como o Streamlit.
+  partida.
 
   Na Vercel nao existe .env: as chaves entram pelo painel do projeto
-  (secao 9.3). Os nomes sao os mesmos.
+  (secao 8.3). Os nomes sao os mesmos.
 
-  Onde pegar cada chave e como o app escolhe o provedor: secao 6 do
-  LEIAME.txt -- vale tudo igual. Para ver os modelos validos da sua conta:
+  AVISO: uma chave de API e uma SENHA QUE GASTA DINHEIRO. Quem tiver a sua
+  chave faz chamadas na sua conta e voce recebe a fatura. Nunca poste em
+  print, video, GitHub ou grupo de WhatsApp. Se desconfiar que vazou, revogue
+  no painel do provedor e gere outra -- revogar e gratuito.
+
+  Onde pegar cada chave:
+
+      Groq       https://console.groq.com/keys
+      OpenAI     https://platform.openai.com/api-keys
+      Anthropic  https://console.anthropic.com/settings/keys
+      Grok (xAI) https://console.x.ai/
+      Ollama     nao precisa de chave (roda local)
+
+  COMO O APP ESCOLHE O PROVEDOR, passo a passo:
+
+  1) Ao abrir, a pagina pede ao servidor (GET /api/provedores) a lista dos
+     provedores cuja chave esta preenchida DE VERDADE. Chave ausente, vazia
+     ou ainda com o texto de exemplo ("cole-sua-chave") conta como nao
+     configurada: o provedor nao entra na lista, sem erro.
+  2) A ordem e Groq > OpenAI > Anthropic > Grok, e o Ollama local entra por
+     ultimo -- so se houver um servidor Ollama respondendo. Sem chave nenhuma
+     e sem Ollama, a barra lateral avisa e o botao Analisar fica desabilitado.
+  3) Na barra lateral, a caixa "Escolha o LLM" mostra essa lista. O primeiro
+     item e o padrao; para usar outro, basta escolher na caixa.
+  4) Abaixo da caixa, uma mensagem confirma o provedor e o modelo em uso.
+     O nome do modelo vem da variavel *_MODEL do provedor no .env (ex.:
+     GROQ_MODEL); se ela estiver vazia, o app usa um modelo padrao.
+
+  Para ver os modelos validos da sua conta:
 
       npm run modelos
 
 
 --------------------------------------------------------------------------------
-7. ROTINA DE USO (o dia a dia)
+6. ROTINA DE USO (o dia a dia)
 --------------------------------------------------------------------------------
 
       cd ~/projects/dsa/12-Projeto-NodeJS
@@ -328,10 +328,9 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
          [DSA Agente Financeiro] Running: get_company_news({"symbol":"MSFT","num_stories":5})
 
   E o show_tool_calls=True do phidata -- so que no log, nao dentro da
-  resposta. Por isso o regex de limpeza do dsa_app.py deixou de existir.
+  resposta.
 
-  'npm run dev' recarrega a pagina sozinho quando voce salva um arquivo
-  (como o "Rerun" do Streamlit, so que automatico).
+  'npm run dev' recarrega a pagina sozinho quando voce salva um arquivo.
 
   Outros comandos:
 
@@ -344,7 +343,7 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
 
 
 --------------------------------------------------------------------------------
-8. COMO O APP FUNCIONA POR DENTRO (o caminho de uma analise)
+7. COMO O APP FUNCIONA POR DENTRO (o caminho de uma analise)
 --------------------------------------------------------------------------------
 
   NAVEGADOR (app/page.tsx)                SERVIDOR (app/api/*)
@@ -365,9 +364,9 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
                          <-------------   { analise: "...markdown..." }
   desenha a analise (react-markdown)      [erro do LLM: 429/502 + explicacao]
 
-  Duas diferencas de experiencia em relacao ao Streamlit, ambas para melhor:
-  os graficos aparecem em ~1 s, enquanto o LLM ainda trabalha; e se o LLM
-  falhar, os graficos continuam na tela (o st.stop() apagava tudo).
+  Os graficos aparecem em ~1 s, enquanto o LLM ainda trabalha; se o LLM
+  falhar, os graficos continuam na tela e o erro aparece explicado (causa e
+  solucao) em vermelho.
 
   Sobre o tempo: uma funcao serverless tem limite de duracao. A rota
   app/api/analisar/route.ts declara 'maxDuration = 300' (segundos), o teto do
@@ -375,35 +374,36 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
 
 
 --------------------------------------------------------------------------------
-9. DEPLOY NA VERCEL (PASSO A PASSO)
+8. DEPLOY NA VERCEL (PASSO A PASSO)
 --------------------------------------------------------------------------------
 
   A Vercel e a empresa que faz o Next.js, e a publicacao de um projeto
   Next.js la e o caminho "sem atrito": ela le o repositorio no GitHub, roda
   'npm install' e 'npm run build', publica em https://SEU-PROJETO.vercel.app
   com HTTPS pronto, e republica a cada 'git push'. Nao ha servidor para
-  cuidar, nao ha systemd, nao ha porta para abrir.
+  cuidar, nao ha porta para abrir.
 
-  9.1 CONTA E REPOSITORIO
+  8.1 CONTA E REPOSITORIO
 
   - Conta gratuita em https://vercel.com ("Continue with GitHub").
-  - O codigo precisa estar num repositorio GitHub. Esta pasta AINDA NAO e
-    um repositorio git (a versao Python vive em outro, agente-ai-01). Crie
-    um novo:
+  - O codigo precisa estar num repositorio GitHub. Este projeto esta em:
 
-        cd ~/projects/dsa/12-Projeto-NodeJS
-        git init
+        https://github.com/Rodrigo-Lopes-de-Andrade/agente-ai-01-nodejs
+
+    Foi criado assim (para repetir em outro projeto):
+
+        git init -b main
         git add -A
         git commit -m "Versao Node.js (Next.js) do capitulo 12"
         gh repo create agente-ai-01-nodejs --public --source=. --push
         # ou: crie o repositorio no site do GitHub e siga o 'git remote add'
         #     que ele mostra, seguido de 'git push -u origin main'
 
-    Confira ANTES do push que 'git status' nao lista .env, .venv nem
-    node_modules: o .gitignore ja cuida disso, mas olhar nao custa.
-    O .env.example (sem valores) VAI junto, de proposito.
+    Confira ANTES do push que 'git status' nao lista .env nem node_modules:
+    o .gitignore ja cuida disso, mas olhar nao custa. O .env.example (sem
+    valores) VAI junto, de proposito.
 
-  9.2 IMPORTAR O PROJETO (no navegador)
+  8.2 IMPORTAR O PROJETO (no navegador)
 
   1) https://vercel.com/new  (ou painel > "Add New..." > "Project")
   2) "Import Git Repository" > escolha agente-ai-01-nodejs.
@@ -412,12 +412,12 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
          Root Directory      ./               (a raiz do repositorio)
          Build Command       next build       (padrao; nao mexa)
          Node.js Version     22.x ou 24.x     (respeita o "engines")
-  4) Abra "Environment Variables" e adicione as chaves (9.3) AGORA, antes
+  4) Abra "Environment Variables" e adicione as chaves (8.3) AGORA, antes
      do primeiro deploy -- senao o app sobe com "Nenhum motor de IA".
   5) "Deploy". A primeira construcao leva 1-2 minutos. Ao terminar, clique
      na URL, digite MSFT e clique em Analisar.
 
-  9.3 VARIAVEIS DE AMBIENTE: AS CHAVES NA NUVEM
+  8.3 VARIAVEIS DE AMBIENTE: AS CHAVES NA NUVEM
 
   Painel do projeto > Settings > Environment Variables. Uma por linha, com
   os MESMOS nomes do .env (sem aspas no valor):
@@ -435,10 +435,9 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
   deploy. Mudou uma chave? Deployments > (o ultimo) > "..." > Redeploy.
 
   Por que o app nao precisou mudar: process.env.GROQ_API_KEY encontra a
-  variavel do painel do mesmo jeito que encontrava a do .env. E o mesmo
-  motivo pelo qual o os.getenv() do Python funcionava no Community Cloud.
+  variavel do painel do mesmo jeito que encontrava a do .env.
 
-  9.4 ATUALIZAR O APP DEPOIS
+  8.4 ATUALIZAR O APP DEPOIS
 
   Todo push no branch main republica em cerca de um minuto:
 
@@ -450,7 +449,7 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
   para testar uma mudanca antes de leva-la ao main. Mudou dependencias
   ('npm install pacote')? O package-lock.json muda junto e vai no commit.
 
-  9.5 ALTERNATIVA: PELA LINHA DE COMANDO (Vercel CLI)
+  8.5 ALTERNATIVA: PELA LINHA DE COMANDO (Vercel CLI)
 
   Serve para publicar sem passar pelo GitHub (bom para um teste rapido):
 
@@ -464,13 +463,13 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
   projeto. 'npx vercel env pull .env.local' baixa as variaveis do painel
   para um arquivo local -- o Next.js tambem le .env.local.
 
-  9.6 LOGS (onde foi parar o terminal)
+  8.6 LOGS (onde foi parar o terminal)
 
   Painel do projeto > aba "Logs" (ou "Observability"). E ali que aparecem
   as linhas "[multi_ai_agent] Running: ..." de cada analise -- o mesmo que
   voce ve no terminal do 'npm run dev'. Filtre pela rota /api/analisar.
 
-  9.7 LIMITES DO PLANO HOBBY (gratuito) -- conferidos em setembro de 2026
+  8.7 LIMITES DO PLANO HOBBY (gratuito) -- conferidos em setembro de 2026
 
   - Duracao maxima de uma funcao: 300 s (padrao e teto). A rota de analise
     ja pede exatamente isso. O plano Pro vai a 800 s.
@@ -480,30 +479,20 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
     OpenAI e Yahoo, que tambem estao nos EUA.
   - O plano Hobby e para uso PESSOAL e nao comercial, pelos termos da
     Vercel. Para cobrar de um cliente (a "monetizacao" do titulo do
-    capitulo), o plano e o Pro (por membro/mes) -- confira os termos e
-    precos atuais em https://vercel.com/pricing antes de fechar negocio.
+    capitulo), o plano e o Pro -- confira termos e precos atuais em
+    https://vercel.com/pricing antes de fechar negocio.
   - Nao ha Ollama nem GPU: um provedor em nuvem (Groq, OpenAI...) e
-    obrigatorio, como no Community Cloud.
-
-  9.8 E A AWS EC2 DA AULA?
-
-  Continua possivel, e o caminho e ate mais simples que o do Streamlit:
-  na instancia, instale o Node (secao 3), 'git clone', 'npm install',
-  'npm run build' e rode 'npm run start' como servico systemd (mesma
-  receita da secao 9.7 do LEIAME.txt, trocando o ExecStart por
-  /home/ubuntu/.nvm/versions/node/v24.x/bin/npm run start). O Next.js
-  escuta na porta 3000; o Caddy da secao 9.8 do LEIAME.txt faz o HTTPS. A
-  vantagem da Vercel e nao ter nada disso para fazer -- nem para manter.
+    obrigatorio.
 
 
 --------------------------------------------------------------------------------
-10. PROBLEMAS COMUNS
+9. PROBLEMAS COMUNS
 --------------------------------------------------------------------------------
 
   SINTOMA                          CAUSA PROVAVEL           SOLUCAO
   -------------------------------- ------------------------ ---------------------
 
-  'node: command not found' ou     Node ausente ou antigo   Secao 3 (nvm install
+  'node: command not found' ou     Node ausente ou antigo   Secao 2 (nvm install
   erro "requires Node >= 22"                                24; nvm use 24)
 
   'npm run dev' falha com          node_modules ausente     npm install
@@ -541,6 +530,11 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
   nada" (log mostra {erro:...})    IP (raro local; possivel { erro } e o agente
                                    em nuvem)                responde com o Yahoo
 
+  Ollama nao responde em           Ollama instalado no      Defina OLLAMA_HOST no
+  localhost (WSL2)                 Windows, nao no Linux    .env com o IP do
+                                                            nameserver do
+                                                            /etc/resolv.conf
+
   Na Vercel: "Nenhum motor de IA"  Variaveis nao salvas,    Settings > Environment
                                    ou salvas apos o deploy  Variables + Redeploy
 
@@ -561,27 +555,21 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
 
 
 --------------------------------------------------------------------------------
-11. O QUE FICOU DE FORA (de proposito)
+10. PROXIMOS PASSOS (o que ficou de fora, de proposito)
 --------------------------------------------------------------------------------
-
-  - O NOTEBOOK (Projeto_DayTrade_Analytics_IA.ipynb) continua sendo a aula
-    peca por peca da versao Python. Nao existe equivalente em Node.js: a
-    forma de estudar esta versao e ler os arquivos na ordem da introducao
-    deste guia, com o bloco "CODIGO ORIGINAL" logo acima de cada trecho.
 
   - STREAMING da resposta (a analise chegando palavra por palavra). O AI SDK
-    faz isso com streamText/useChat, mas complica o tratamento de erros e
-    nao existia no Streamlit. E o proximo passo natural para quem quiser
-    evoluir o app.
+    faz isso com streamText/useChat, mas complica o tratamento de erros. E o
+    proximo passo natural para quem quiser evoluir o app.
 
-  - LOGIN e COBRANCA (a "monetizacao"): o LEIAME.txt, secao 9.10, aponta o
-    st.login() e o Stripe. Em Next.js os equivalentes sao Auth.js
-    (https://authjs.dev) e o mesmo Stripe Payment Links. Fora do escopo do
-    capitulo.
+  - LOGIN e COBRANCA (a "monetizacao" do titulo do capitulo). Em Next.js os
+    caminhos usuais sao o Auth.js (https://authjs.dev) para login com
+    Google/GitHub e o Stripe Payment Links para cobranca, liberando o acesso
+    pelo e-mail logado. Fora do escopo do capitulo.
 
 
 --------------------------------------------------------------------------------
-12. RESUMO DOS COMANDOS
+11. RESUMO DOS COMANDOS
 --------------------------------------------------------------------------------
 
   INSTALACAO (uma vez so)
@@ -590,7 +578,7 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
       nvm install 24
       cd ~/projects/dsa/12-Projeto-NodeJS
       npm install
-      cp .env.example .env      # e preencha (ou reaproveite o .env da versao Python)
+      cp .env.example .env      # e preencha
 
   DIA A DIA
       cd ~/projects/dsa/12-Projeto-NodeJS
@@ -602,18 +590,17 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
       npm run typecheck
       npm run build
 
-  VERCEL (secao 9)
+  VERCEL (secao 8)
       git add -A && git commit -m "..." && git push    # republica sozinho
       npx vercel --prod                                 # ou pela CLI
       https://vercel.com/dashboard                      # painel, logs, variaveis
 
 
 --------------------------------------------------------------------------------
-13. ARQUIVOS DA PASTA
+12. ARQUIVOS DA PASTA
 --------------------------------------------------------------------------------
 
-  VERSAO NODE.JS (esta)
-      package.json                     dependencias e scripts (secao 4.1)
+      package.json                     dependencias e scripts (secao 3.1)
       package-lock.json                versoes exatas instaladas (nao edite)
       tsconfig.json                    configuracao do TypeScript
       next.config.ts                   configuracao do Next.js (vazia, comentada)
@@ -644,20 +631,12 @@ app/layout.tsx > app/page.tsx > components/*.tsx.
                                        em next.config.ts
       node_modules/                    pacotes instalados (nao versionar)
       .next/                           saida do build (nao versionar)
-      LEIAME-NODEJS.txt                este arquivo
-
-  VERSAO PYTHON (referencia; ver LEIAME.txt)
-      dsa_app.py                       o app Streamlit (original comentado)
-      Projeto_DayTrade_Analytics_IA.ipynb
-      dsa_lista_modelos.py
-      pyproject.toml, uv.lock, requirements.txt, .python-version, .venv/
-
-  COMPARTILHADOS
       .env                             suas chaves (nao versionar)
-      .gitignore                       exclui .env, .venv, node_modules, .next
-      .vscode/                         interpretador Python + TypeScript do projeto
+      .gitignore                       exclui .env, node_modules, .next, .vercel
+      .vscode/                         TypeScript do projeto + pastas ocultas
+      LEIAME-NODEJS.txt                este arquivo
 
 
 ================================================================================
-FIM DA VERSAO NODE.JS
+FIM
 ================================================================================

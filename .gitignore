@@ -1,10 +1,3 @@
-# ---- Python (versao original do capitulo, Streamlit) ----
-.venv/
-__pycache__/
-.ipynb_checkpoints/
-*.pyc
-.streamlit/secrets.toml
-
 # ---- Chaves de API: NUNCA versionar ----
 # O .env fica so na sua maquina. Na Vercel as chaves entram pelo painel
 # (Settings > Environment Variables). O .env.example, sem valores, e versionado
@@ -13,9 +6,9 @@ __pycache__/
 .env.local
 .env.*.local
 
-# ---- Node.js / Next.js (versao nova) ----
-# node_modules e a .venv do JavaScript: pesa centenas de MB e e recriada por
-# 'npm install' a partir do package.json + package-lock.json.
+# ---- Node.js / Next.js ----
+# node_modules pesa centenas de MB e e recriada por 'npm install' a partir do
+# package.json + package-lock.json.
 /node_modules
 # .next e a pasta de build gerada por 'next dev' e 'next build'.
 /.next/
